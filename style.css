@@ -26,6 +26,40 @@ h1{
     padding: 30px;
 }
 
+/* Style for the search-history div */
+.search-history {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  /* Style for the header within the search-history div */
+  .search-history h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  /* Style for the list of search history items */
+  #search-history-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  /* Style for each search history item */
+  #search-history-list li {
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  /* Add a background color when hovering over a search history item */
+  #search-history-list li:hover {
+    background-color: #e0e0e0;
+  }
+  
+
 .weather-input input{
     width: 100%;
     height: 46px;

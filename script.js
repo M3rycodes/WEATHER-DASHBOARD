@@ -1,7 +1,9 @@
 const cityInput = document.querySelector(".city-input");
-const searchButton = document.querySelector(".searchh-btn");
+const searchButton = document.querySelector(".search-btn");
 const locationButton = document.querySelector(".location-btn");
 const currentWeatherDiv = document.querySelector(".current-weather");
+const weatherCardsDiv = document.querySelector(".weather-cards"); // Added missing variable
+const searchHistoryList = document.getElementById("search-history-list");
 const searchHistory = [];
 
 const API_KEY = "9da25984643beac3e1384f5968baf23a"; // API Key for OpenWeatherMap API
@@ -26,10 +28,21 @@ const  createWeatherCard = (cityName, weatherItem, index) => {
         <h4>Humidity: ${weatherItem.main.humidity}%</h4>
        </li> `;
    }
-}   
+};
+
+const displaySearchHistory = () => {
+    searchHistoryList.innerHTML = "";
+    searchHistory.forEach((city) => {
+      const li = document.createElement("li");
+      li.textContent = city;
+      li.addEventListener("click", () => getCityCoordinates(city));
+      searchHistoryList.appendChild(li);
+    });
+  };
+  
 
 const getWeatherDetails = (cityName, latitude, longitude) => {
-    const WEATHER_API_URL = `http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
+    const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
 
     fetch(WEATHER_API_URL).then(res => res.json()).then(data => {
        const uniqueForecastDays = [];
@@ -41,8 +54,8 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
         });
 
         cityInput.value= "";
-        currentWeatherDiv.innerHTML = " ";
-        weatherCardsDiv.innerHTML = " ";
+        currentWeatherDiv.innerHTML = "";
+        weatherCardsDiv.innerHTML = "";
         
         
         fiveDaysForecast.forEach((weatherItem, index) => {
@@ -59,9 +72,9 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
 }   
 
 const getCityCoordinates = (cityName) => {
-    const cityName = cityInput.value.trim();
+    const cityNameToSearch= cityName ||  cityInput.value.trim();
     if(!cityName) return;
-    
+
     const GEOCODING_API_URL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${stateCode},${countryCode}&limit=1&appid=${API_KEY}`;
 
     fetch(GEOCODING_API_URL).then(res => res.json()).then(data => {
@@ -80,7 +93,7 @@ const getCityCoordinates = (cityName) => {
 
 const getUserCoordinates = () => {
     navigator.geolocation.getCurrentPosition(
-        position => {
+        (position) => {
             const{ latitude, longitude } = position.coords;
             const API_URL= `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_KEY}`;
               fetch(API_URL).then(res => ResizeObserver.json()).then(data => {
