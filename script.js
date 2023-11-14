@@ -1,117 +1,130 @@
 const cityInput = document.querySelector(".city-input");
-const searchButton = document.querySelector(".search-btn");
+const searchButton = document.querySelector("#search-btn");
 const locationButton = document.querySelector(".location-btn");
 const currentWeatherDiv = document.querySelector(".current-weather");
-const weatherCardsDiv = document.querySelector(".weather-cards"); // Added missing variable
-const searchHistoryList = document.getElementById("search-history-list");
-const searchHistory = [];
+const weatherCardsDiv = document.querySelector(".weather-cards");
 
-const API_KEY = "9da25984643beac3e1384f5968baf23a"; // API Key for OpenWeatherMap API
+const openWeatherMapApiKey = '"9da25984643beac3e1384f5968baf23a"';
 
-const  createWeatherCard = (cityName, weatherItem, index) => {
-    if(index === 0) {
-    return `<div class="details">
-    <h3> ${cityName} (${weatherItem.dt_txt.split(" ") [0]}) </h3>
-    <h4> Temperature: ${(weatherItem.main.temp - 273.15).toFixed(2)}ºC</h4>
-    <h4> Wind: ${weatherItem.wind.speed} M/S</h4>
-    <h4> Humidity: ${weatherItem.main.humidity}%</h4>
-    </div>
-    <div class="icon"><img src=src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@4x.png" alt="weather-icon">
-      <h4>${weatherItem.weather[0].description}</h4>
-      </div>`;
-} else {
-    return `<li class="card">
-      <h2>(${weatherItem.dt_txt.split(" ") [0]})</h2>
-      <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0]})</h2>
-        <h4>Temp: ${(weatherItem.main.temp - 273.15).toFixed(2)}ºC</h4>
-        <h4>Wind: ${weatherItem.wind.speed} M/S </h4>
-        <h4>Humidity: ${weatherItem.main.humidity}%</h4>
-       </li> `;
-   }
+async function searchCity(cityName) {
+  try {
+    const geocoordinates = await fetch(
+      `https://api.openweathermap.org/geo/1.0/direct?q=New York&limit=36&appid=${openWeatherMapApiKey}`
+    );
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${openWeatherMapApiKey}`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const loadingIndicator = document.createElement("div");
+loadingIndicator.classList.add("loading-indicator");
+loadingIndicator.textContent = "Loading...";
+document.body.appendChild(loadingIndicator);
+
+// Remove the loading indicator.
+document.body.removeChild(loadingIndicator);
+
+const getWeatherIconUrl = (iconCode) => {
+  return `https://openweathermap.org/img/wn/${iconCode}.png`;
 };
 
-const displaySearchHistory = () => {
-    searchHistoryList.innerHTML = "";
-    searchHistory.forEach((city) => {
-      const li = document.createElement("li");
-      li.textContent = city;
-      li.addEventListener("click", () => getCityCoordinates(city));
-      searchHistoryList.appendChild(li);
-    });
-  };
-  
+function displayCityWeather(weatherData) {
+  const cityName = weatherData.name;
+  const date = new Date();
+  const weatherIconUrl = getWeatherIconUrl(weatherData.weather[0].icon);
+  const temperature = weatherData.main.temp;
+  const humidity = weatherData.main.humidity;
+  const windSpeed = weatherData.wind.speed;
 
-const getWeatherDetails = (cityName, latitude, longitude) => {
-    const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
+  // Display the weather data on the page.
+  document.querySelector(".city-name").textContent = cityName;
+  document.querySelector(".date").textContent =
+    date.toLocaleDateString("en-US");
+  document.querySelector(".weather-icon").src = weatherIconUrl;
 
-    fetch(WEATHER_API_URL).then(res => res.json()).then(data => {
-       const uniqueForecastDays = [];
-       const fiveDaysForecast = data.list.filter(forecast => {
-           const forecastDate = new Date(forecast.dt_txt).getDate();
-           if(!uniqueForecastDays.includes(forecastDate)) {
-            return uniqueForecastDays.push(forecastDate);
-          }
-        });
+  document.querySelector(
+    ".temperature"
+  ).textContent = `Temperature: ${temperature}°C`;
+  document.querySelector(".humidity").textContent = `Humidity: ${humidity}%`;
+  document.querySelector(
+    ".wind-speed"
+  ).textContent = `Wind Speed: ${windSpeed} M/S`;
+}
+// Make an API call to OpenWeatherMap to get the weather data for the specified city.
+const response = await fetch(
+  `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${openWeatherMapApiKey}`
+);
+const weatherData = await response.json();
 
-        cityInput.value= "";
-        currentWeatherDiv.innerHTML = "";
-        weatherCardsDiv.innerHTML = "";
-        
-        
-        fiveDaysForecast.forEach((weatherItem, index) => {
-           const html = createWeatherCard(cityName, weatherItem, index);
-            if (index === 0) {
-                currentWeatherDiv.insertAdjacentHTML("beforeend", html);
-            } else {
-                weatherCardsDiv.insertAdjacentHTML("beforeend", html);
-            }
-        });        
-    }).catch(() => {
-        alert("An error occured while fetching the weather forecast!");
-    });
-}   
+// Get the temperature, wind speed, and humidity from the weather data.
+const temperature = weatherData.main.temp;
+const windSpeed = weatherData.wind.speed;
+const humidity = weatherData.main.humidity;
 
-const getCityCoordinates = (cityName) => {
-    const cityNameToSearch= cityName ||  cityInput.value.trim();
-    if(!cityName) return;
+// Display the city's name and current temperature
+console.log(`${cityName} ${temperature}°C`);
 
-    const GEOCODING_API_URL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${stateCode},${countryCode}&limit=1&appid=${API_KEY}`;
+// Display the weather icon
+const weatherIcon = document.createElement("img");
+const weatherIconUrl = getWeatherIconUrl(weatherData.weather[0].icon);
+weatherIcon.src = weatherIconUrl;
+document.querySelector(".current-weather").appendChild(weatherIcon);
 
-    fetch(GEOCODING_API_URL).then(res => res.json()).then(data => {
-        if(!data.length) return alert(`No coordinates found for ${cityName}`);
-        const { name, latitude, longitude} = data[0];
+// Create a function to add a city to the search history.
+function addCityToSearchHistory(cityName) {
+  const searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+  searchHistory.push(cityName);
+  localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+}
 
-        searchHistory.push(cityName);
-        
-        displaySearchHistory();
+// Add an event listener to the search button to call the searchCity() function and add the city to the search history.
+searchButton.addEventListener("click", async () => {
+  const cityName = cityInput.value;
+  const weatherData = await searchCity(cityName);
+  displayCityWeather(weatherData);
+  addCityToSearchHistory(cityName);
+});
 
-        getWeatherDetails(name, latitude, longitude);
-    }).catch(() => {
-        alert("An error occured while fetching the coordinates!");
-    });
-};
+// 5-Day Forecast
+const forecast = weatherData.forecast.daily;
+const weatherCards = document.querySelector(".weather-cards");
+weatherCards.innerHTML = "";
 
-const getUserCoordinates = () => {
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const{ latitude, longitude } = position.coords;
-            const API_URL= `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_KEY}`;
-              fetch(API_URL).then(res => ResizeObserver.json()).then(data => {
-                const {name} = data[0];
-                getWeatherDeatails(name, latitude, longitude);
-              }).catch(() => {
-                 alert("An error occured while fetching the city name!");
-              });
-        },
-        error => {
-            if(error.code === error.PERMISSION_DENIED) {
-                alert("Geolocation request denied. Please reset location permission to grant access again.");
-            } else {
-                alert("Geolocation request error. Please reset location permission.");
-            }
-        });
-}    
-        
-locationButton.addEventListener("click", getUserCoordinates);
-searchButton.addEventListener("click", getCityCoordinates);
-cityInput.addEventListener("keyup", e => e.key === "Enter"  && getCityCoordinates());
+for (const day of forecast) {
+  const weatherCard = document.createElement("li");
+  weatherCard.classList.add("card");
+
+  // Display the day of the week on the weather card.
+  const dayOfWeek = new Date(day.dt * 1000).toLocaleDateString("en-US", {
+    weekday: "long",
+  });
+  weatherCard.innerHTML = +`<h3>${dayOfWeek}</h3>`;
+
+  // Display the weather icon on the weather card.
+  const weatherIconUrl = getWeatherIconUrl(day.weather[0].icon);
+  weatherCard.innerHTML += `<img src="${weatherIconUrl}" alt="weather-icon">`;
+
+  // Display the temperature on the weather card.
+  weatherCard.innerHTML += `<h4>Temperature: ${day.temp.day}ºC</h4>`;
+
+  // Display the wind speed on the weather card.
+  weatherCard.innerHTML += `<h4>Wind: ${day.wind_speed} M/S</h4>`;
+
+  // Display the humidity on the weather card.
+  weatherCard.innerHTML += `<h4>Humidity: ${day.humidity}%</h4>`;
+
+  // Append the weather card to the list of weather cards.
+  weatherCards.appendChild(weatherCard);
+}
+
+searchButton.addEventListener("click", async () => {
+  const cityName = cityInput.value;
+  const weatherData = await searchCity(cityName);
+  displayCityWeather(weatherData);
+  addCityToSearchHistory(cityName);
+});
