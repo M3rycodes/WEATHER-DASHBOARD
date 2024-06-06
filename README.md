@@ -20,4 +20,4 @@ THEN I am again presented with current and future conditions for that city
 
 
 Screenshot
- ![image](https://github.com/M3rycodes/WEATHER-DASHBOARD/assets/103341227/3ea31528-64bd-4d71-864c-4ff9e11ca14e)
+ ![image](<Screenshot 2024-06-05 at 8.20.21 PM.png>)

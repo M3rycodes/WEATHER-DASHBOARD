@@ -42,7 +42,7 @@ h1{
   }
   
   /* Style for the list of search history items */
-  #search-history-list {
+  .search-history-list {
     list-style: none;
     padding: 0;
   }
@@ -70,18 +70,14 @@ h1{
     margin: 10px 0 20px 0;
 }
 
-.weather-input{
-    width: 550px;
+.weather-input, .weather-data {
+    margin-bottom: 20px;
 }
 
-.weather-input:focus{
-    padding: 0 16px;
-    border: 2px solid #5372F0;
+.weather-input h3, .search-history h3 {
+    margin-bottom: 10px;
 }
 
-.weather-data{
-    width: 100%;
-}
 
 .weather-data .current-weather{
     color: #fff;
@@ -135,6 +131,14 @@ h1{
     background: #E3F2FD;
     margin-top: -4px;
 }
+
+.city-input {
+    width: calc(100% - 100px);
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+}
+
 
 .current-weather{
     color: #fff;
@@ -204,6 +208,18 @@ h1{
     margin: 5px 0 -12px 0;
 }
 
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
 @media (max-width: 1400px) {
     .weather-data .current-weather {
         padding: 20px;
@@ -245,3 +261,4 @@ h1{
         font-size: 1.35rem;
     }
 }
+

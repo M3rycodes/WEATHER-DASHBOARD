@@ -3,75 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Project App</title>
-    <link rel="stylesheet" href="./style.css">
-    <script src="./script.js" defer></script>
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <h1>Weather Dashboard</h1>
-        <div class="container border">
-            <div class="weather-input">
-                <h3> Enter a City Name</h3>
-             <input class="city-input" type: "text" placeholder="E.g., New York, London, Tokyo">
-            <button id="search-btn">Search</button> 
+    <div class="container border">
+        <div class="weather-input">
+            <h3>Enter a City Name</h3>
+            <input class="city-input" type="text" placeholder="E.g., New York, London, Tokyo">
+            <button id="search-btn" class="search-btn">Search</button>
             <div class="separator"></div>
-            <button class="location-btn"> Use Current Location</button>
+            <button class="location-btn">Use Current Location</button>
             <div class="search-history">
                 <h3>Search History</h3>
-                <ul class="search-history-list"></ul>
-            </div>   
+                <ul id="search-history-list" class="search-history-list"></ul>
+            </div>
         </div>
-            <div class="weather-data">
-                <div class="current-weather">
-                    <div class="details">
-                        <h2> _________ (________) </h2>
-                        <h4> Temperature: ___ºC </h4>
-                        <h4> Wind: ___ M/S </h4>
-                        <h4> Humidity: ___% </h4>
-                    </div>
-                </div> 
-                <div class="days-forecast">
-                    <h2> 5-Day Forecast </h2>
-                    <ul class="weather-cards">
-                     <li class="card">
-                     <h3> ______ (________)</h3>
-                     <img src="https://openweathermap.org/img/wn/10d@4x.png" alt="weather-icon">
-                     <h4> Temperature: ____ºC </h4>
-                     <h4> Wind: ___ M/S </h4>
-                     <h4> Humidity: ____% </h4>
-                     </li>
-                     <li class="card">
-                        <h3> ________ (_______) </h3>
-                        <img src="https://openweathermap.org/img/wn/10d@4x.png" alt="weather-icon">
-                        <h4> Temperature: ___ºC </h4>
-                        <h4> Wind: ____ M/S </h4>
-                        <h4> Humidity: ____% </h4>
-                        </li>
-                        <li class="card">
-                            <h3> ________ (______) </h3>
-                            <img src="https://openweathermap.org/img/wn/10d@4x.png" alt="weather-icon">
-                            <h4> Temperature: ____ºC </h4>
-                            <h4> Wind: _____ M/S </h4>
-                            <h4> Humidity: ____% </h4>
-                            </li>
-                        <li class="card">
-                            <h3> _________ (_______) </h3>
-                            <img src="https://openweathermap.org/img/wn/10d@4x.png" alt="weather-icon">
-                             <h4> Temperature: ____ºC </h4>
-                             <h4> Wind: _____ M/S </h4>
-                             <h4> Humidity: ____% </h4>
-                            </li>  
-                         <li class="card">
-                            <h3> ________ (______) </h3>
-                             <img src="https://openweathermap.org/img/wn/10d@4x.png" alt="weather-icon">
-                            <h4> Temperature: ___ºC </h4>
-                            <h4> Wind: _____ M/S </h4>
-                            <h4> Humidity: _____% </h4>
-                            </li>      
-                        </ul>
-                    </div>
+        <div class="weather-data">
+            <div class="current-weather">
+                <div class="details">
+                    <h2 class="city-name">City Name</h2>
+                    <h4 class="date">Date</h4>
+                    <h4 class="temperature">Temperature: ___ºC</h4>
+                    <h4 class="wind-speed">Wind: ___ M/S</h4>
+                    <h4 class="humidity">Humidity: ___%</h4>
+                </div>
+                <div class="icon">
+                    <img class="weather-icon" src="" alt="weather-icon">
                 </div>
             </div>
-    
-        </body>
-    </html>
+            <div class="days-forecast">
+                <h2>5-Day Forecast</h2>
+                <ul class="weather-cards"></ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
